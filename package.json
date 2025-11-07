@@ -1,0 +1,19 @@
+{
+    "name": "example-flights",
+    "version": "0.0.1",
+    "scripts": {
+        "setup": "curl -L 'https://drive.google.com/uc?export=download&id=1qlio3d1W8k6bs9Z6-7U7vwnbuAYGZzZK' -o flights.duckdb",
+        "graphene": "graphene"
+    },
+    "engines": {
+        "npm": ">=7.0.0",
+        "node": ">=20.0.0"
+    },
+    "type": "module",
+    "dependencies": {
+        "@graphenedata/cli": "^0.0.4"
+    },
+    "graphene": {
+        "dialect": "duckdb"
+    }
+}
