@@ -11,7 +11,7 @@
     },
     "type": "module",
     "dependencies": {
-        "@graphenedata/cli": "^0.0.4"
+        "@graphenedata/cli": "latest"
     },
     "graphene": {
         "dialect": "duckdb"
