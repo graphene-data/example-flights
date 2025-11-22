@@ -5,7 +5,6 @@ A Graphene project analyzing FAA flights data from 2000-2005.
 
 1. `git clone https://github.com/graphene-data/example-flights.git`
 2. `cd example-flights && npm install`
-3. `npm run setup`
 
 ## Usage
 
