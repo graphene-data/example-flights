@@ -1,3 +1,3 @@
-This is a Graphene project. Always read the [Graphene documentation](node_modules/@graphenedata/cli/dist/docs/graphene.md) before doing anything in this directory.
+This is a Graphene project. Read @/node_modules/@graphenedata/cli/dist/docs/graphene.md before doing anything.
 
-_Flights_ is a database containing FAA flight data from 2000-2005. The GSQL model is inside /tables.
+_Flights_ is a database containing FAA flight data from 2000-2005. All the tables are inside @/tables.
