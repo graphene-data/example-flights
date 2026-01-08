@@ -12,6 +12,7 @@ This is a Graphene project to analyze FAA flight data from 2000-2005.
 - Write optimized GSQL queries that filter and limit to only the data needed
 - Include comments explaining complex logic
 - If you encounter a syntax error, consult the Graphene documentation again before trying a different approach.
+- Only the GSQL functions supported on DuckDB are available (see documentation).
 
 ## When writing to a .gsql file
 - ALWAYS check your code with `npm run graphene check`.
