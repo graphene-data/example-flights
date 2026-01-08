@@ -1,6 +1,2 @@
 node_modules
 .env
-
-# pnpm files (only present due to local development workflow)
-pnpm-lock.yaml
-pnpm-workspace.yaml

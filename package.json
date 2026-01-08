@@ -10,9 +10,6 @@
     "node": ">=20.0.0"
   },
   "type": "module",
-  "dependencies": {
-    "@graphenedata/cli": "latest"
-  },
   "graphene": {
     "duckdb": {}
   }
