@@ -12,5 +12,8 @@
   "type": "module",
   "graphene": {
     "duckdb": {}
+  },
+  "dependencies": {
+    "@graphenedata/cli": "^0.0.11"
   }
 }
