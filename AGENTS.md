@@ -18,7 +18,6 @@ This is a Graphene project to analyze FAA flight data from 2000-2005.
 - ALWAYS check your code with `npm run graphene check`.
 
 ## When writing to a Graphene .md file
-- If you add or edit a code-fenced GSQL query, run it separately in the CLI first to verify the results.
 - ALWAYS check your code with `npm run graphene check [mdPath]`. Run the command with full permissions because the screenshot may not work in a sandbox.
 - If `check` is successful, it will save a screenshot. Look at the screenshot and critique what you see: 
   - Do all the numbers make sense?

@@ -14,6 +14,6 @@
     "duckdb": {}
   },
   "dependencies": {
-    "@graphenedata/cli": "^0.0.13"
+    "@graphenedata/cli": "^0.0.14"
   }
 }
