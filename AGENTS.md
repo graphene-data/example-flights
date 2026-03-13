@@ -1,30 +1,11 @@
 This is a Graphene project to analyze FAA flight data from 2000-2005.
 
-# Resources
+Assume all DuckDB functions are available when writing GSQL.
+This project uses npm, so run all Graphene CLIs using `npm exec`.
 
-- Graphene documentation: @/node_modules/@graphenedata/cli/dist/docs/graphene.md. It is CRITICAL that you read this **in its entirety** (it's not too long). It is imperative that you understand the Graphene CLI, GSQL, and Graphene Markdown.
-- Available data: /tables directory. The .gsql files inside document the schemas, joins, metrics, and usage instructions for each table.
-
-# Best practices
-
-## When formulating GSQL queries (in CLI, .gsql, or .md)
-- Use stored expressions whenever possible
-- Write optimized GSQL queries that filter and limit to only the data needed
-- Include comments explaining complex logic
-- If you encounter a syntax error, consult the Graphene documentation again before trying a different approach.
-- Only the GSQL functions relevant to DuckDB are available (see documentation).
-
-## When writing to a .gsql file
-- ALWAYS check your code with `npm run graphene check`.
-
-## When writing to a Graphene .md file
-- ALWAYS check your code with `npm run graphene check [mdPath]`. Run the command with full permissions because the screenshot may not work in a sandbox.
-- If `check` is successful, it will save a screenshot. Look at the screenshot and critique what you see: 
-  - Do all the numbers make sense?
-  - Are all the data values and axes labels formatted in a way that is easy to read?
-  - Does the shape of the visualized data require an adjustment to scale, axis min/max, axis split, etc.?
-  - Are metrics colored consistently across visualizations?
-  - Are any visualizations missing data altogether? 
-  - Is that visualization type really the best way to illustrate the data?
-  - Are any visualizations redundant? Can you say the same thing with less?
-- Do not multiply percentages by 100. Graphene's visualizations do this automatically.
+Available tables:
+- **tables/flights.gsql** — core fact table; one row per flight. Columns: `id2`, `carrier`, `origin`, `destination`, `flight_num`, `flight_time`, `tail_num`, `dep_time`, `arr_time`, `dep_delay`, `arr_delay`, `taxi_out`, `taxi_in`, `distance`, `cancelled`, `diverted`. Dimensions: `is_long_haul`, `is_cancelled_or_diverted`, `miles_flown`. Measures: `on_time_departure_rate`, `on_time_arrival_rate`, `cancellation_rate`, `diversion_rate`. Joins: `carriers`, `airports` (as `origin_airport` and `destination_airport`), `aircraft`.
+- **tables/carriers.gsql** — airline lookup. Columns: `code`, `name`, `nickname`. Joins: `flights`.
+- **tables/airports.gsql** — airport lookup. Columns: `id`, `code`, `fac_type`, `fac_use`, `faa_region`, `city`, `county`, `state`, `full_name`, `longitude`, `latitude`, `elevation`, `cbd_dist`, `cbd_dir`, `joint_use`, `mil_rts`, `cntl_twr`, `major`, and more. Joins: `flights` (as `departures` and `arrivals`).
+- **tables/aircraft.gsql** — individual aircraft (by tail number). Columns: `id`, `tail_num`, `aircraft_model_code`, `year_built`, `name` (owner), `city`, `state`, `status_code`, and more. Dimensions: `age` (years old as of 2005). Measures: `avg_age`. Joins: `aircraft_models`, `flights`.
+- **tables/aircraft_models.gsql** — aircraft model specs. Columns: `aircraft_model_code`, `manufacturer`, `model`, `engines`, `seats`, `weight`, `speed`, and more. Joins: `aircraft`.
