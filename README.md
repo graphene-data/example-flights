@@ -1,5 +1,7 @@
 # example-flights
-A Graphene project analyzing FAA flights data from 2000-2005.
+A Graphene project analyzing FAA flights data from 2000-2005. Graphene is a BI framework optimized for agents. 
+
+[graphenedata.com](https://graphenedata.com/)
 
 ## Setup
 
