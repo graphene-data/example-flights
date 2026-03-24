@@ -22,7 +22,7 @@ Graphene is primarily comprised of three things:
 2. A semantic modeling and querying language, GSQL. There are dedicated `.gsql` files for semantic models, whereas GSQL `select` statements are  embedded inside dashboard files.
 3. A CLI for checking syntax, running queries, starting up the dev server, and more.
 
-The graphene-cli npm package ships with an agent skill that documents everything an agent needs to know about Graphene. You can read it in the .claude or .agents folders.
+The graphene-cli npm package ships with an agent skill that documents everything an agent needs to know about Graphene. You can read it in the .claude or .agents folders (after cloning this repo and installing the CLI).
 
 ## Connecting Graphene to other data
 
