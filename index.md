@@ -11,13 +11,6 @@ A comprehensive dashboard showcasing flight data metrics from 2000-2005.
   <BigValue data=flights value=on_time_arrival_rate title="On-Time Arrival Rate" fmt=pct1 />
 </Row>
 
-<Row>
-  <BigValue data=flights value=cancellation_rate title="Cancellation Rate" fmt=pct2 />
-  <BigValue data=flights value=diversion_rate title="Diversion Rate" fmt=pct2 />
-  <BigValue data=flights value=avg(dep_delay) title="Avg Departure Delay (min)" fmt=num1 />
-  <BigValue data=flights value=avg(arr_delay) title="Avg Arrival Delay (min)" fmt=num1 />
-</Row>
-
 ```sql weekly_trends
 select 
   date_trunc('week', dep_time) as week,
