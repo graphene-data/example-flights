@@ -1,40 +1,47 @@
+-- Individual aircraft from the FAA registry, including registration and ownership info.
+-- Each row is one aircraft (tail_num).
 table aircraft (
-  id bigint -- Primary key
-  tail_num varchar -- e.g., 'N806MD'
-  aircraft_serial varchar
-  aircraft_model_code varchar
-  aircraft_engine_code varchar
-  year_built bigint
-  aircraft_type_id bigint
-  aircraft_engine_type_id bigint
-  registrant_type_id bigint
-  name varchar -- Owner/registrant
-  address1 varchar
-  address2 varchar
-  city varchar
-  state varchar
-  zip varchar
-  region varchar
-  county varchar
-  country varchar -- Typically 'US'
-  certification varchar
-  status_code varchar -- 'A' = Active, 'V' = Valid, 'M' = Missing, 'E' = Expired, 'R' = Revoked, 'S' = Suspended
-  mode_s_code varchar
-  fract_owner varchar
-  last_action_date date
-  cert_issue_date date
-  air_worth_date date
+
+  /* Identifiers */
+
+  id BIGINT
+  tail_num VARCHAR -- Registration identifier, e.g., 'N806MD'
+  aircraft_serial VARCHAR -- Manufacturer serial number
+  mode_s_code VARCHAR -- Mode S transponder code
+
+  /* Model & type */
+
+  aircraft_model_code VARCHAR
+  aircraft_engine_code VARCHAR
+  aircraft_type_id BIGINT
+  aircraft_engine_type_id BIGINT
+  year_built BIGINT
+
+  /* Registration & status */
+
+  registrant_type_id BIGINT -- Registrant type (individual, corporation, etc.)
+  -- 'A' = Active, 'V' = Valid, 'M' = Missing, 'E' = Expired, 'R' = Revoked, 'S' = Suspended
+  status_code VARCHAR
+  certification VARCHAR
+  fract_owner VARCHAR -- Fractional ownership indicator
+  last_action_date DATE
+  cert_issue_date DATE
+  air_worth_date DATE -- Airworthiness certificate date
+
+  /* Owner / address */
+
+  name VARCHAR -- Owner / registrant name
+  address1 VARCHAR
+  address2 VARCHAR
+  city VARCHAR
+  state VARCHAR
+  zip VARCHAR
+  region VARCHAR
+  county VARCHAR
+  country VARCHAR -- Typically 'US'
 
   /* Join relationships */
 
   join one aircraft_models on aircraft_model_code = aircraft_models.aircraft_model_code
   join many flights on tail_num = flights.tail_num
-
-  /* Dimensions */
-
-  age: 2005 - year_built -- Age in years. Data only goes up to 2005, so using 2005 as "this year" instead of current_date()
-
-  /* Measures */
-
-  avg_age: avg(age)
-);
+)

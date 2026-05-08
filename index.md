@@ -1,93 +1,55 @@
-# Flight Analytics Dashboard
+---
+title: Home
+layout: dashboard
+---
 
-A comprehensive dashboard showcasing flight data metrics from 2000-2005.
+This project is for operations and analysis of the FAA's commercial flight data from **2000–2005**.
 
-## Key Metrics
+## The data at a glance
 
-<Row>
-  <BigValue data=flights value=count(*) title="Total Flights" fmt=num0 />
-  <BigValue data=flights value=sum(miles_flown) title="Total Miles Flown" fmt=num0m />
-  <BigValue data=flights value=on_time_departure_rate title="On-Time Departure Rate" fmt=pct1 />
-  <BigValue data=flights value=on_time_arrival_rate title="On-Time Arrival Rate" fmt=pct1 />
-</Row>
-
-```sql weekly_trends
-select 
-  date_trunc('week', dep_time) as week,
-  cancellation_rate,
-  diversion_rate,
-  avg(dep_delay) as avg_dep_delay,
-  avg(arr_delay) as avg_arr_delay,
-  on_time_departure_rate,
-  on_time_arrival_rate,
-  count(*) as flight_count,
-  avg(distance) as avg_distance
-from flights
-group by 1
-order by 1 asc
-```
-
-## Trends over time
-
-<Row>
-  <LineChart title="Flight volume vs. average distance" 
-    subtitle="Trending to more, shorter distance flights" 
-    data=weekly_trends 
-    x=week 
-    y=flight_count 
-    y2=avg_distance 
-  />
-  <LineChart title="Cancellation rate" 
-    subtitle="9/11 is clearly shown with a spike in cancellations" 
-    data=weekly_trends 
-    x=week 
-    y=cancellation_rate 
-    yFmt=pct1 
-  />
-</Row>
-
-## Carrier Comparison
-
-```sql carrier_performance
-select 
-  carriers.name as carrier_name,
-  count(*) as flight_count,
-  on_time_departure_rate,
-  1 - on_time_departure_rate as delayed_departure_rate,
-  on_time_arrival_rate,
-  1 - on_time_arrival_rate as delayed_arrival_rate,
-  cancellation_rate,
-  avg(dep_delay) as avg_departure_delay,
-  avg(arr_delay) as avg_arrival_delay
-from flights 
-group by 1
-order by 2 desc
+```gsql totals
+from flights select
+  count() as flights,
+  count(distinct carrier) as carriers,
+  count(distinct origin) as airports,
+  count(distinct tail_num) as aircraft
 ```
 
 <Row>
-  <BarChart title="Average Departure Delay by Carrier (minutes)" 
-    data=carrier_performance 
-    x=carrier_name 
-    y=avg_departure_delay 
-    yAxisTitle="Minutes"
-    y2=delayed_departure_rate
-    y2Fmt=pct1
-    y2SeriesType=line
-    y2AxisTitle="% Flights Delayed"
-  />
-  <PieChart title="Flight Distribution by Carrier" 
-    data=carrier_performance 
-    category=carrier_name 
-    value=flight_count 
-  />
+  <BigValue data=totals value=flights title="Flights" fmt=num0 />
+  <BigValue data=totals value=carriers title="Carriers" />
+  <BigValue data=totals value=airports title="Airports" />
+  <BigValue data=totals value=aircraft title="Aircraft" fmt=num0 />
 </Row>
 
-<Table title="Carrier details" data=carrier_performance sort="flight_count desc" rows=25>
-  <Column id=carrier_name />
-  <Column id=flight_count />
-  <Column id=on_time_departure_rate fmt=pct1 />
-  <Column id=on_time_arrival_rate fmt=pct1 />
-  <Column id=cancellation_rate fmt=pct2 />
-  <Column id=avg_departure_delay fmt=num1 />
-  <Column id=avg_arrival_delay fmt=num1 />
-</Table>
+```gsql monthly_volume
+from flights where not is_cancelled
+select date_trunc('month', dep_time) as month, count() as flights
+order by month
+```
+
+<AreaChart
+  data=monthly_volume
+  x=month
+  y=flights
+  title="Monthly flight volume"
+  height=240px
+/>
+
+## Pages in this project
+
+- **[Operations Overview](/pages/operations_overview)** — top-line KPIs, monthly volume, a delay heatmap by hour and day-of-week, and a ranked table of carriers. The default landing dashboard if you just want the numbers.
+- **[Carrier Detail](/pages/carrier_detail)** — pick any airline from the dropdown to see its rank, fleet, delay distribution, and 2005 monthly trend against the rest of the industry.
+- **[Delay Factors](/pages/delay_factors)** — a deeper analysis of what actually predicts a late departure: hour of day, airline, origin airport, day of week. Spoiler: one factor dominates the others.
+
+## The data model
+
+Five tables (in `/tables`), joined into a star around `flights`:
+
+| Table | Grain | Joins to | Notable fields |
+| --- | --- | --- | --- |
+| `flights` | one scheduled flight | `carriers`, `airports` (×2), `aircraft` | `dep_delay`, `arr_delay`, `cancelled`, `on_time_arrival_rate`, `cancellation_rate`, `aircraft_age` |
+| `carriers` | one airline | `flights` | `code`, `name`, `nickname` |
+| `airports` | one FAA facility | `flights` (as origin and destination) | `code`, `city`, `state`, `latitude`, `longitude`, `major` |
+| `aircraft` | one registered tail number | `flights`, `aircraft_models` | `tail_num`, `year_built`, owner info |
+| `aircraft_models` | one aircraft model | `aircraft` | `manufacturer`, `model`, `seats`, `engines`, `speed` |

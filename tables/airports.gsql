@@ -1,34 +1,48 @@
+-- Airports and other aviation facilities (heliports, seaplane bases, etc.) in the FAA registry.
+-- Each row is one facility (code).
 table airports (
-  id bigint -- Primary key
-  code varchar -- IATA airport code (e.g., 'JFK', 'LAX', 'ORD')
-  site_number varchar
-  fac_type varchar -- e.g., 'AIRPORT', 'HELIPORT', 'SEAPLANE BASE', 'BALLOONPORT', 'GLIDERPORT', 'STOLPORT', 'ULTRALIGHT'
-  fac_use varchar -- 'PU' = Public, 'PR' = Private
-  faa_region varchar
-  faa_dist varchar
-  city varchar
-  county varchar
-  state varchar
-  full_name varchar
-  own_type varchar -- 'PU' = Public, 'PR' = Private
-  longitude double
-  latitude double
-  elevation bigint -- Elevation in feet above sea level
-  aero_cht varchar
-  cbd_dist bigint -- Distance to CBD in miles
-  cbd_dir varchar -- Compass direction to CBD (e.g., 'N', 'SW', 'SE')
-  act_date varchar
-  cert varchar
-  fed_agree varchar
-  cust_intl varchar
-  c_ldg_rts varchar
-  joint_use varchar -- 'Y' = yes, 'N' = no
-  mil_rts varchar -- 'Y' = yes, 'N' = no
-  cntl_twr varchar -- 'Y' = yes, 'N' = no
-  major varchar -- 'Y' = yes, 'N' = no
+
+  /* Identifiers */
+
+  id BIGINT
+  code VARCHAR -- IATA airport code (e.g., 'JFK', 'LAX', 'ORD')
+  site_number VARCHAR -- FAA site number identifier
+  full_name VARCHAR -- Full official name of the airport
+
+  /* Classification */
+
+  fac_type VARCHAR -- Facility type: 'AIRPORT', 'HELIPORT', 'SEAPLANE BASE', 'BALLOONPORT', 'GLIDERPORT', 'STOLPORT', 'ULTRALIGHT'
+  fac_use VARCHAR -- 'PU' = Public, 'PR' = Private
+  own_type VARCHAR -- Ownership type: 'PU' = Public, 'PR' = Private
+  major VARCHAR -- Major hub indicator ('Y' / 'N')
+  cntl_twr VARCHAR -- Control tower presence ('Y' / 'N')
+
+  /* Location */
+
+  city VARCHAR
+  county VARCHAR
+  state VARCHAR
+  longitude DOUBLE
+  latitude DOUBLE
+  elevation BIGINT -- Elevation above sea level, in feet
+  cbd_dist BIGINT -- Distance to central business district, in miles
+  cbd_dir VARCHAR -- Compass direction to CBD (e.g., 'N', 'SW', 'SE')
+
+  /* FAA / regulatory */
+
+  faa_region VARCHAR -- FAA region code
+  faa_dist VARCHAR -- FAA district code
+  aero_cht VARCHAR -- Aeronautical chart identifier
+  act_date VARCHAR -- Activation date
+  cert VARCHAR -- Certification info (e.g., 'ES 05/1973')
+  fed_agree VARCHAR -- Federal agreement status
+  cust_intl VARCHAR -- Customs international status
+  c_ldg_rts VARCHAR -- Commercial landing rights indicator
+  joint_use VARCHAR -- Joint use indicator ('Y' / 'N' / empty)
+  mil_rts VARCHAR -- Military routes indicator ('Y' / 'N' / empty)
 
   /* Join relationships */
 
   join many flights as departures on code = departures.origin
   join many flights as arrivals on code = arrivals.destination
-);
+)

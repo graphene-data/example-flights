@@ -1,20 +1,34 @@
+-- Individual commercial flights from the FAA dataset (2000-2005), one row per scheduled flight.
+-- Each row is one flight (id2).
 table flights (
-  id2 bigint -- Primary key
-  carrier varchar -- Airline carrier code (e.g., 'AA', 'UA', 'DL')
-  origin varchar -- IATA airport code for the origin airport
-  destination varchar -- IATA airport code for the destination airport
-  flight_num varchar
-  flight_time bigint -- Scheduled flight time in minutes (time in the air, excluding taxi)
-  tail_num varchar -- Aircraft tail number (registration identifier)
-  dep_time timestamp -- Actual departure time after delay
-  arr_time timestamp -- Actual arrival time after delay
-  dep_delay bigint -- Departure delay in minutes (negative = early, positive = late)
-  arr_delay bigint -- Arrival delay in minutes (negative = early, positive = late)
-  taxi_out bigint -- Time spent taxiing out to runway before takeoff, in minutes
-  taxi_in bigint -- Time spent taxiing in from runway after landing, in minutes
-  distance bigint -- The distance between the origin and destination airports, in miles. Not to be confused with miles_flown
-  cancelled varchar -- 'Y' = yes, 'N' = no
-  diverted varchar -- 'Y' = yes, 'N' = no
+
+  /* Identifiers */
+
+  id2 BIGINT
+  carrier VARCHAR -- Airline carrier code, e.g., 'AA', 'UA', 'DL'
+  flight_num VARCHAR -- Flight number assigned by the carrier
+  tail_num VARCHAR -- Aircraft registration
+
+  /* Route */
+
+  origin VARCHAR -- IATA code of origin airport
+  destination VARCHAR -- IATA code of destination airport
+  distance BIGINT -- Distance between origin and destination, in miles. Not to be confused with miles_flown
+
+  /* Times & delays (minutes) */
+
+  dep_time TIMESTAMP -- Actual departure time
+  arr_time TIMESTAMP -- Actual arrival time
+  flight_time BIGINT -- Scheduled time in the air, excluding taxi
+  taxi_out BIGINT -- Taxi time before takeoff
+  taxi_in BIGINT -- Taxi time after landing
+  dep_delay BIGINT -- Departure delay; negative = early, positive = late
+  arr_delay BIGINT -- Arrival delay; negative = early, positive = late
+
+  /* Status */
+
+  cancelled VARCHAR -- 'Y' / 'N'
+  diverted VARCHAR -- 'Y' / 'N'
 
   /* Join relationships */
 
@@ -23,16 +37,25 @@ table flights (
   join one airports as destination_airport on destination = destination_airport.code
   join one aircraft on tail_num = aircraft.tail_num
 
-  /* Dimensions  */
+  /* Dimensions */
 
-  is_long_haul: flight_time > 360 -- Long haul = over 6 hours
+  is_long_haul: flight_time > 360 -- Over 6 hours in the air
+  is_cancelled: cancelled = 'Y'
   is_cancelled_or_diverted: cancelled = 'Y' or diverted = 'Y'
-  miles_flown: case when is_cancelled_or_diverted then 0 else distance end -- Actual miles flown, approximated by the distance between the origin and destination airports not including cancelled or diverted flights
+  -- Distance actually flown; cancelled/diverted flights count as 0
+  miles_flown: case when is_cancelled_or_diverted then 0 else distance end
+  aircraft_age: YEAR(dep_time)::float - aircraft.year_built
+
+  status: case
+    when cancelled = 'Y' then 'Cancelled'
+    when dep_delay > 15 then 'Delayed'
+    else 'On Time'
+  end
 
   /* Measures */
 
-  on_time_departure_rate: avg(case when dep_delay <= 0 then 1 else 0 end)
-  on_time_arrival_rate: avg(case when arr_delay <= 0 then 1 else 0 end)
-  cancellation_rate: avg(case when cancelled = 'Y' then 1 else 0 end)
-  diversion_rate: avg(case when diverted = 'Y' then 1 else 0 end)
-);
+  on_time_departure_rate: avg(case when dep_delay <= 0 then 1 else 0 end) #ratio
+  on_time_arrival_rate: avg(case when arr_delay <= 0 then 1 else 0 end) #ratio
+  cancellation_rate: avg(case when cancelled = 'Y' then 1 else 0 end) #ratio
+  diversion_rate: avg(case when diverted = 'Y' then 1 else 0 end) #ratio
+)
