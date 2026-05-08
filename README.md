@@ -25,8 +25,7 @@ _Present your findings in a new page._
 ## Usage
 
 1. Run `npm exec graphene serve` to start the dev server.
-2. Go to **localhost:4000** in your browser to view the example dashboard provided here.
-3. Ask your coding agent: "Come up with an interesting question about this data, and present your findings in a new page." The dashboard will be viewable at **localhost:4000/page-path**.
+2. Ask your coding agent: "Come up with an interesting question about this data, and present your findings in a new page." The dashboard will be viewable at **localhost:4000/page-path**.
 
 ## Use Graphene at your company
 
