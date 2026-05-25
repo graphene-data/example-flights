@@ -22,6 +22,6 @@
   },
   "dependencies": {
     "@duckdb/node-api": "^1.3.2-alpha.26",
-    "@graphenedata/cli": "^0.0.18"
+    "@graphenedata/cli": "^0.0.19"
   }
 }
