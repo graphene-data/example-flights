@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "graphene-dev",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["graphene", "serve"],
+      "port": 4000
+    }
+  ]
+}
