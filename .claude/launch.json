@@ -3,9 +3,9 @@
   "configurations": [
     {
       "name": "graphene-dev",
-      "runtimeExecutable": "npx",
-      "runtimeArgs": ["graphene", "serve"],
-      "port": 4000
+      "runtimeExecutable": "sh",
+      "runtimeArgs": ["-c", "GRAPHENE_PORT=\"$PORT\" npx graphene serve"],
+      "autoPort": true
     }
   ]
 }
