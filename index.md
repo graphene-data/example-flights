@@ -342,9 +342,6 @@ from flights select
 </div>
 
 <p class="ed-erd-caption">Fig. 1 — Five tables in /tables, joined into a star around flights.</p>
-
 </div>
-
 <p class="ed-colophon">Built with Graphene · GSQL models define the joins, dimensions, and measures used across every page.</p>
-
 </div>
