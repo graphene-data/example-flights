@@ -48,5 +48,4 @@ table aircraft (
   /* Dimensions */
 
   year_built_safe: nullif(year_built, 0) #timeGrain=year
-
 )
