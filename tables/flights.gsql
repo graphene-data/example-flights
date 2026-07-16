@@ -44,7 +44,7 @@ table flights (
   is_cancelled_or_diverted: cancelled = 'Y' or diverted = 'Y'
   -- Distance actually flown; cancelled/diverted flights count as 0
   miles_flown: case when is_cancelled_or_diverted then 0 else distance end #unit=miles
-  aircraft_age: YEAR(dep_time)::float - aircraft.year_built #unit=years
+  aircraft_age: YEAR(dep_time)::float - aircraft.year_built_safe #unit=years
   scheduled_dep_time: dep_time - interval dep_delay minute
   scheduled_arr_time: arr_time - interval arr_delay minute
 
