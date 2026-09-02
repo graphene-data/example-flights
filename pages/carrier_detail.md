@@ -1,6 +1,5 @@
 ---
 layout: dashboard
-hideInNav: true
 ---
 
 # Carrier Detail
